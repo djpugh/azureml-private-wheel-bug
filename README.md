@@ -1,19 +1,21 @@
 # Reproduction steps for AzureML Private Wheel Error
 
+1. Install the requirements from `requirements.txt`
 
-1. Configure an AzureML workspace with storage vNet
-2. Set environment variables as appropriate:
+2. Configure an AzureML workspace with storage vNet
+
+3. Set environment variables as appropriate:
     * *AML_SUBSCRIPTION_ID*
     * *AML_RESOURCE_GROUP*
     * *AML_WORKSPACE_NAME*
     * *AML_COMPUTE_NAME*
 
-3. Make sure that you have local authentication for accessing the workspace
+4. Make sure that you have local authentication for accessing the workspace
 
-4. Run: `python submit.py`
+5. Run: `python submit.py`
     This will output a portal run link, and that run is expected to pass
 
-5. Run: `python submit.py --private-wheel`
+6. Run: `python submit.py --private-wheel`
     This will output a portal run link, and that run is expected to fail
     The expected error message is a 500 error after a long time (10+ minutes), with an error message that resembles:
     ```
