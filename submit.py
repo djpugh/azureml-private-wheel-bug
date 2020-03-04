@@ -19,7 +19,8 @@ COMPUTE_NAME_ENV_KEY = 'AML_COMPUTE_NAME'
 
 @click.command()
 @click.option('--private-wheel/--no-private-wheel', default=False)
-def submit(private_wheel=False):
+@click.option('--build-wheel/--no-build-wheel', default=False)
+def submit(private_wheel=False, build_wheel=False):
     # Load environment parameters
     subscription_id = os.environ.get(SUBSCRIPTION_ID_ENV_KEY)
     resource_group = os.environ.get(RESOURCE_GROUP_ENV_KEY)
@@ -33,10 +34,12 @@ def submit(private_wheel=False):
     cd = CondaDependencies.create(pip_packages=['azureml-sdk'])
     # Build a test wheel
     if private_wheel:
-        cwd = os.getcwd()
-        os.chdir('basic_wheel')
-        subprocess.check_call([sys.executable, 'setup.py', 'bdist_wheel'])
-        os.chdir(cwd)
+        if build_wheel:
+            # Wheel build not working on MS debug instance, so added to git repo
+            cwd = os.getcwd()
+            os.chdir('basic_wheel')
+            subprocess.check_call([sys.executable, 'setup.py', 'bdist_wheel'])
+            os.chdir(cwd)
         wheel = glob.glob('basic_wheel/dist/testpackage*.whl')[0]
         cd.add_pip_package(Environment.add_private_pip_wheel(workspace=ws, file_path=wheel, exist_ok=True))
 
